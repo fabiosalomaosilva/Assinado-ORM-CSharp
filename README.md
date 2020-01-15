@@ -59,7 +59,7 @@ Classes POCO
     
 Funções de CRUD
 
-        public Pasta SearchById(int id)
+        public Produto SearchById(int id)
         {
             try
             {
@@ -97,7 +97,7 @@ Funções de CRUD
 
         }
         
-        public List<Perfil> ListAll()
+        public List<Produto> ListAll()
         {
             try
             {
@@ -114,15 +114,15 @@ Funções de CRUD
             }
         }
     
-        public List<Perfil> ListAll()
+        public List<Produto> SearchByCriterias(int categoriaId, bool emEstoque)
         {
             try
             {
                 using (var db = new Session("connectionstring"))
                 {
                    var param = new Parametros();
-                    param.AddPropriedades("Nome");
-                    param.AddCriterio("EmEstoque", true);
+                    param.AddCriterio("CategoriaId", categoriaId);
+                    param.AddCriterio("EmEstoque", emEstoque);
                     
                     var lista =  db.ListarPorCriterios<Produto>(param, SqlOperadorComparacao.AND);
                     return lista;
