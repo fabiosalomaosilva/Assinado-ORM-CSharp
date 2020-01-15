@@ -27,48 +27,84 @@ Nova atualização adicionou suporte para consultas com Expression Lambda "Inclu
 
 Classes POCO
    
-    public class Estado
+    public class Categoria
     {
         [Key]
         public int ID { get; set; }
         
-        [MaxLength(50)]
-        public string Estado { get; set; }
-        
-        public string UF { get; set; }
+        public string Nome { get; set; }      
         
         //InverseProperty é o nome da classe que fará o relacionamento
         [InverseProperty("Municipio")]
         public virtual ICollection<Parcela> Municipios { get; set; }
     }
         
-    public class Municipio
+    public class Produto
     {
         [Key]
         public int ID { get; set; }    
         
-        public int EstadoId { get; set; }
-        [ForeignKey("EstadoId")]
-        public Estado Estado { get; set; }
+        public int CategoriaId { get; set; }
+        [ForeignKey("CategoriaId")]
+        public Categoria Categoria { get; set; }
 
-        [MaxLength(60)]
-        public string Municipio { get; set; }       
+        public string Nome { get; set; }      
+        
+        public string Descricao { get; set; } 
+        
+        public decimal Preco { get; set; } 
+        
+        public bool EmEstoque { get; set; } 
     }
     
 Funções de CRUD
 
-    public List<Perfil> ListarTodos()
+        public Pasta SearchById(int id)
         {
             try
             {
-                using (var db = new Session(Utils.ConString))
+                using (var db = new Session("connectionstring"))
                 {
-                    var param = new Parametros();
-                    param.AddCriterio("Ativo", true);
-                    param.AddCriterio("IdEmpresa", LoginRep.IdEmpresa);
-                    param.AddPropriedades("NomePerfil");
+                    return db.PesquisarID<Produto>(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(String.Format("Ocorreu um erro: {0}", ex.Message));
+            }
 
-                    return db.ListarPorCriterios<Perfil>(param, SqlOperadorComparacao.AND);
+        }
+        
+        public Produto SearchByNome(string nomeProduto)
+        {
+            try
+            {
+                using (var db = new Session("connectionstring"))
+                {
+                    //Primeira forma
+                    var criterio = new Criterio("Nome", nomeProduto)
+                    return produto;
+                    
+                    //Segunda forma
+                    var produto = db.PesquisarCriterio<Produto>(new Criterio("Nome", nomeProduto));
+                    return produto;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(String.Format("Ocorreu um erro: {0}", ex.Message));
+            }
+
+        }
+        
+        public List<Perfil> ListAll()
+        {
+            try
+            {
+                using (var db = new Session("connectionstring"))
+                {
+                    var lista =  db.ListarTudo<Produto>();
+                    return lista;
                 }
 
             }
@@ -78,4 +114,75 @@ Funções de CRUD
             }
         }
     
+        public List<Perfil> ListAll()
+        {
+            try
+            {
+                using (var db = new Session("connectionstring"))
+                {
+                   var param = new Parametros();
+                    param.AddPropriedades("Nome");
+                    param.AddCriterio("EmEstoque", true);
+                    
+                    var lista =  db.ListarPorCriterios<Produto>(param, SqlOperadorComparacao.AND);
+                    return lista;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(String.Format("Ocorreu um erro: {0}", ex.Message));
+            }
+        }
         
+        public void Insert(Produto obj)
+        {
+            try
+            {
+                using (var db = new Session("connectionstring"))
+                {                    
+                    obj.Nome = "iPhone";
+                    obj.Descricao = "Aparelho celular marca Apple";
+                    obj.CategoriaId = 1;
+                    obj.Preco = 3500;
+                    obj.EmEstoque = true;
+                    db.Inserir(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(String.Format("Ocorreu um erro: {0}", ex.Message));
+            }
+        }
+        
+        public void Edit(Produto obj)
+        {
+            try
+            {
+                using (var db = new Session("connectionstring"))
+                {                    
+                    obj.Nome = "iPhone 8";
+                    obj.Preco = 3200;
+                    db.Editar(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(String.Format("Ocorreu um erro: {0}", ex.Message));
+            }
+        }
+        
+        public void Remove(int id)
+        {
+            try
+            {
+                using (var db = new Session("connectionstring"))
+                {                    
+                    var produto = db.PesquisarID<Produto>(id));
+                    db.Editar(produto);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(String.Format("Ocorreu um erro: {0}", ex.Message));
+            }
+        }
