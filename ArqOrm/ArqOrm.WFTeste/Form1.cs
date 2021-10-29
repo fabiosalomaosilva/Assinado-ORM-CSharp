@@ -43,13 +43,13 @@ namespace ArqOrm.WFTeste
             List<PessoaFisica> lista = new List<PessoaFisica>();
             PessoaFisica pes1 = new PessoaFisica() 
             {
-                Nome = "Adriana Salomão",
+                Nome = "João Maria Francisco",
                 Idade = 34,
                 DataCriacao = DateTime.Now,
             };
             PessoaFisica pes2 = new PessoaFisica()
             {
-                Nome = "Karina Vogth",
+                Nome = "Maria Francisca joão",
                 Idade = 25,
                 DataCriacao = DateTime.Now,
             };
